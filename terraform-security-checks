@@ -1,0 +1,67 @@
+name: Feature Branch Workflow
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+       - 'environment/**'
+       - ' modules/**'
+       - '*.tf'
+       - '*.tfvars'
+
+permission:
+  contents: read
+  pull-request:write
+  security-events: write
+
+jobs:
+ terraform-feature-checks:
+   name: Feature Branch Terraform checks
+   runs-on: ubuntu-latest
+
+   steps:
+     -name: Checkout code
+      uses: action/checkout@v4
+
+    -name: Setup Terraform
+     uses: hashicorp/setup-terraform@v3
+     with:
+       terraform_version: 1.6.0
+
+  - name: Terraform Format Check
+    id: fmt
+    run: terraform fmt -check -recursive
+
+  -name: Terraform Init (Dev )
+   run: |
+      cd environment/dev
+      terraform validate
+
+  - name: Terraform Validate ( Dev)
+    run: |
+      cd environment/dev
+      terraform validate
+
+
+  -name: Terraform Init (Prod )
+   run: |
+      cd environment/prod
+      terraform validate
+ - name: Terraform Validate ( Prod)
+    run: |
+      cd environment/prod
+      terraform validate
+
+  - name : TFSec Security Scan ( Dev)
+    run: |
+      cd environment/dev
+      tfsec . 
+  - name : TFSec Security Scan ( Dev)
+    run: |
+      cd environment/dev
+      tfsec . 
+
+
+
+
+ 
