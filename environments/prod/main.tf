@@ -21,7 +21,7 @@ locals {
   
   # Naming convention
   name_prefix = "todo-prod"
-  location    = "East US"
+  location    = "East US 2"
 }
 
 # Resource Group
@@ -118,7 +118,7 @@ module "key_vault" {
 module "storage_account" {
   source = "../../modules/azurerm_storage_account"
   
-  storage_account_name   = replace("${local.name_prefix}stg", "-", "")
+  storage_account_name   = lower(replace("${local.name_prefix}stg${random_string.stg_suffix.result}", "-", ""))
   resource_group_name    = module.resource_group.resource_group_name
   location              = local.location
   account_tier          = "Standard"
@@ -127,6 +127,15 @@ module "storage_account" {
   allow_nested_items_to_be_public = false
   
   tags = local.common_tags
+}
+
+# Random string for globally unique storage account name
+resource "random_string" "stg_suffix" {
+  length  = 6
+  upper   = false
+  lower   = true
+  numeric = true
+  special = false
 }
 
 # SQL Server

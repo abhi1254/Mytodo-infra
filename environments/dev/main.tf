@@ -28,7 +28,7 @@ locals {
   
   # Naming convention
   name_prefix = "todo-dev-${random_string.suffix.result}"
-  location    = "East US"
+  location    = "East US 2"
 }
 
 # Resource Group
