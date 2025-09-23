@@ -142,7 +142,7 @@ resource "random_string" "stg_suffix" {
 module "sql_server" {
   source = "../../modules/azurerm_sql_server"
   
-  sql_server_name = "${local.name_prefix}-sql"
+  sql_server_name = "${local.name_prefix}-sql-${random_string.stg_suffix.result}"
   rg_name         = module.resource_group.resource_group_name
   location        = local.location
   admin_username  = "todoappadmin"
