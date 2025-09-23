@@ -233,3 +233,16 @@ module "managed_identity" {
   
   tags = local.common_tags
 }
+
+# ACR
+module "acr" {
+  source = "../../modules/azurerm_container_registry"
+
+  acr_name = lower(replace("${local.name_prefix}acr", "-", ""))
+  rg_name  = module.resource_group.resource_group_name
+  location = local.location
+  sku      = "Basic"
+
+  admin_enabled = false
+  tags          = local.common_tags
+}
